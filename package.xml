@@ -1,0 +1,26 @@
+<package>
+  <!--REQUIRED HEADER-->
+  <name>easyloggingpp</name>
+  <description>
+    easyloggingpp
+  </description>
+  <version>1.0.0</version>
+  <maintainer email="foo@bar.com">Foo Bar</maintainer>
+  <license>BSD</license>
+
+
+  <!--BUILD TOOL DEPENDENCIES-->
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <!--BUILD DEPENDENCIES-->
+  <!-- build_depend></build_depend -->
+
+
+  <!--RUNTIME DEPENDENCIES-->
+  <!-- run_depend></run_depend -->
+
+
+  <!--TEST DEPENDENCIES-->
+  <!-- test_depend></test_depend -->
+</package>

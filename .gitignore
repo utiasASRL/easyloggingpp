@@ -11,3 +11,5 @@ releases/*
 /samples/STL/logs/*
 
 /tools/build-*
+
+*~
