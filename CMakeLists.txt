@@ -23,7 +23,7 @@ if (CATKIN_ENABLED)
     #   "DEPENDS" specifies the system dependencies 
     #   "CATKIN_DEPENDS" specifies the ros dependencies
     catkin_package(
-                   INCLUDE_DIRS src
+                   INCLUDE_DIRS .
                    LIBRARIES
                    ##Dependencies (build_depends and run_depends)
                    DEPENDS #[system_dependency]
@@ -53,7 +53,7 @@ foreach(p INCLUDE CMAKE)
 endforeach()
 
 install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/easylogging++.h
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/easylogging++.h
   DESTINATION ${INSTALL_INCLUDE_DIR}
 )
 
