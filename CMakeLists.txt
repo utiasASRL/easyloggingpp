@@ -37,15 +37,16 @@ endif()
 
 #setup installation locations
 set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
+set(INSTALL_CATKIN_DIR share/${PROJECT_NAME} CACHE PATH "Installation directory for catkin package.xml")
 if(WIN32 AND NOT CYGWIN)
     set(DEF_INSTALL_CMAKE_DIR CMake)
 else()
-    set(DEF_INSTALL_CMAKE_DIR lib/cmake/easyloggingpp)
+    set(DEF_INSTALL_CMAKE_DIR lib/cmake/${PROJECT_NAME})
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 
 # Make relative paths absolute (needed later on)
-foreach(p INCLUDE CMAKE)
+foreach(p INCLUDE CMAKE CATKIN)
     set(var INSTALL_${p}_DIR)
     if(NOT IS_ABSOLUTE "${${var}}")
         set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
@@ -61,10 +62,10 @@ install(
 ### Enable find_package()
 ######################################################################################
 
-### Create the RobochunkConfig.cmake and RobochunkConfigVersion files
+### Create the <package>Config.cmake and <package>ConfigVersion files
 
 # Export the package for use from the build-tree
-export(PACKAGE easyloggingpp)
+export(PACKAGE ${PROJECT_NAME})
 
 # Create variable for the local build tree
 get_property(CONF_INCLUDE_DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
@@ -73,13 +74,16 @@ get_property(CONF_INCLUDE_DIRS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IN
 set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${INSTALL_INCLUDE_DIR})
 
 # Create the <name>Config.cmake for the installation tree
-configure_file(easyloggingppConfig.cmake.in
-    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/easyloggingppConfig.cmake" @ONLY)
+configure_file(${PROJECT_NAME}Config.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY)
 
-# Install the easyloggingppConfig.cmake and RobochunkConfigVersion.cmake
+# Install the <package>Config.cmake
 install(FILES
-    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/easyloggingppConfig.cmake"
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
     DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+
+# Install Catkin package.xml
+install(FILES package.xml DESTINATION ${INSTALL_CATKIN_DIR})
