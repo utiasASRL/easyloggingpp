@@ -12,15 +12,40 @@
 #include "mythread.h"
 #include "easylogging++.h"
 
-_INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP
 
+class LogHandler : public el::LogDispatchCallback {
+public:
+    void handle(const el::LogDispatchData* data) {
+        // NEVER LOG ANYTHING HERE! NOT HAPPY WITH MULTI_THREADING
+        ELPP_COUT << "Test this " << data << std::endl;
+    }
+};
+
+class HtmlHandler : public el::LogDispatchCallback {
+public:
+    HtmlHandler() {
+        el::Loggers::getLogger("html");
+    }
+    void handle(const el::LogDispatchData* data) {
+        // NEVER LOG ANYTHING HERE! NOT HAPPY WITH MULTI_THREADING
+        ELPP_COUT << "<b>" << data->logMessage()->message() << "</b>" << std::endl;
+    }
+};
+
+    
 int main(int argc, char* argv[]) {
-    _START_EASYLOGGINGPP(argc, argv);
+    START_EASYLOGGINGPP(argc, argv);
 
-    // Do not use default configuration, use from file instead
-    //easyloggingpp::Configurations c("../basic/test_conf.conf");
-    //easyloggingpp::Loggers::reconfigureAllLoggers(c);
+    el::Loggers::removeFlag(el::LoggingFlag::NewLineForContainer);
+    el::Helpers::installLogDispatchCallback<LogHandler>("LogHandler");
+    el::Helpers::installLogDispatchCallback<HtmlHandler>("HtmlHandler");
+    LOG(INFO) << "First log";
+    LogHandler* logHandler = el::Helpers::logDispatchCallback<LogHandler>("LogHandler");
+    logHandler->setEnabled(false);
 
+    LOG(INFO) << "Second log";
+#if 1
     bool runThreads = true;
 
     if (runThreads) {
@@ -31,55 +56,65 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    LWARNING << "Starting Qt Logging";
+     TIMED_BLOCK(t, "whole-block") {
+        t.timer.checkpoint();
 
-    QVector<QString> stringList;
-    stringList.push_back (QString("Test"));
-    stringList.push_back (QString("Test 2"));
-    int i = 0;
-    while (++i != 100)
-        LINFO << stringList;
+        LOG(WARNING) << "Starting Qt Logging";
 
-    QPair<QString, int> qpair_;
-    qpair_.first = "test";
-    qpair_.second = 2;
-    LINFO << qpair_;
+        QVector<QString> stringList;
+        stringList.push_back (QString("Test"));
+        stringList.push_back (QString("Test 2"));
+        int i = 0;
+        while (++i != 2)
+            LOG(INFO) << stringList;
 
-    QMap<QString, int> qmap_;
-    qmap_.insert ("john", 100);
-    qmap_.insert ("michael", 101);
-    LINFO << qmap_;
+        QPair<QString, int> qpair_;
+        qpair_.first = "test";
+        qpair_.second = 2;
+        LOG(INFO) << qpair_;
 
-    QMultiMap<QString, int> qmmap_;
-    qmmap_.insert ("john", 100);
-    qmmap_.insert ("michael", 101);
-    LINFO << qmmap_;
+        QMap<QString, int> qmap_;
+        qmap_.insert ("john", 100);
+        qmap_.insert ("michael", 101);
+        LOG(INFO) << qmap_;
 
-    QSet<QString> qset_;
-    qset_.insert ("test");
-    qset_.insert ("second");
-    LINFO << qset_;
+        QMultiMap<QString, int> qmmap_;
+        qmmap_.insert ("john", 100);
+        qmmap_.insert ("michael", 101);
+        LOG(INFO) << qmmap_;
 
-    QVector<QString*> ptrList;
-    ptrList.push_back (new QString("Test"));
-    LINFO << ptrList;
-    qDeleteAll(ptrList);
+        QSet<QString> qset_;
+        qset_.insert ("test");
+        qset_.insert ("second");
+        LOG(INFO) << qset_;
 
-    QHash<QString, QString> qhash_;
-    qhash_.insert ("john", "101fa");
-    qhash_.insert ("michael", "102mf");
-    LINFO << qhash_;
+        QVector<QString*> ptrList;
+        ptrList.push_back (new QString("Test"));
+        LOG(INFO) << ptrList;
+        qDeleteAll(ptrList);
 
-    QLinkedList<QString> qllist_;
-    qllist_.push_back ("test");
-    qllist_.push_back ("test 2");
-    LINFO << qllist_ ;
+        QHash<QString, QString> qhash_;
+        qhash_.insert ("john", "101fa");
+        qhash_.insert ("michael", "102mf");
+        LOG(INFO) << qhash_;
 
-    QStack<QString> qstack_;
-    qstack_.push ("100");
-    qstack_.push ("200");
-    qstack_.push ("100");
-    LDEBUG << "Printing qstack " << qstack_;
+        QLinkedList<QString> qllist_;
+        qllist_.push_back ("test");
+        qllist_.push_back ("test 2");
+        LOG(INFO) << qllist_ ;
+
+        QStack<QString> qstack_;
+        qstack_.push ("100");
+        qstack_.push ("200");
+        qstack_.push ("100");
+        LOG(DEBUG) << "Printing qstack " << qstack_;
+
+
+        DCHECK(2 > 1) << "What????";
+    }
+    
+    LOG(INFO) << "This is not unicode";
+    LOG(INFO) << "This is unicode: " << L"世界，你好";
+#endif
     return 0;
-
 }

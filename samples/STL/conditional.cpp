@@ -1,24 +1,24 @@
-/**
- * This file is part of EasyLogging++ samples
- * Demonstration of conditional logging
- *
- * Revision 1.0
- * @author mkhan3189
- */
+ //
+ // This file is part of EasyLogging++ samples
+ //
+ // Conditional logging using LOG_IF, you can use CLOG_IF(condition, loggerID) macro to use your own logger if you 
+ // don't want to use default logger
+ //
+ // Revision 1.1
+ // @author mkhan3189
+ //
 
 #include "easylogging++.h"
 
-_INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP
 
 int main(void) {
 
-  LINFO_IF(1 == 1) << "1 is equal to 1";
+  LOG_IF(1 == 1, INFO) << "1 is equal to 1";
 
-  LINFO_IF(1 > 2) << "1 is greater than 2";
+  LOG_IF(1 > 2, INFO) << "1 is greater than 2";
 
-  LDEBUG_IF(1 == 2) << "1 is equal to 2";
+  LOG_IF(1 == 2, DEBUG) << "1 is equal to 2";
 
-  PINFO_IF((1 == 2) && (3 == 4)) << "Wow, 1 == 2 and 3 == 4";
-  PWARNING_IF((1 == 1) && (3 < 4)) << "Wow, 1 == 1 and 3 < 4";
   return 0;
 }

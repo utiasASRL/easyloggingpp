@@ -1,11 +1,13 @@
-# Get original file
-if [ "$1" = "updated" ];then
-  cp ../easylogging++.h .
-fi
-# Compile
-g++ main.cc -lgtest -pthread -o alltests -Wno-unused-result -D_STOP_ON_FIRST_ELPP_ASSERTION -D_ELPP_STRICT_ROLLOUT -D_ELPP_STL_LOGGING
-# Run
-./alltests
-# Clean
-rm alltests
-rm -rf logs/
+
+# Builds all tests into bin/ and runs
+
+[ -d "bin" ] || mkdir "bin"
+
+cd bin
+echo "Building..."
+qmake-qt4 ../qt-gtest-proj-intel.pro
+make
+echo "Running..."
+./qt-gtest-proj-intel
+cd ..
+echo "Completed!"

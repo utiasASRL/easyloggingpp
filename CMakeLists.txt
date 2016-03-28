@@ -54,7 +54,7 @@ foreach(p INCLUDE CMAKE CATKIN)
 endforeach()
 
 install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/easylogging++.h
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/easylogging++.h
   DESTINATION ${INSTALL_INCLUDE_DIR}
 )
 

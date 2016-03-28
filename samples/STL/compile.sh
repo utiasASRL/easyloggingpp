@@ -2,24 +2,20 @@
 
 FILE=$1
 
-if [ "$2" = "WINDOWS" ];then
-  macro="_WIN32"
+macro="$macro -DELPP_DEBUG_ERRORS"
+macro="$macro -DELPP_THREAD_SAFE"
+macro="$macro -DELPP_STL_LOGGING"
+macro="$macro -DELPP_LOG_UNORDERED_SET"
+macro="$macro -DELPP_LOG_UNORDERED_MAP"
+macro="$macro -DELPP_STACKTRACE_ON_CRASH"
+macro="$macro -DELPP_LOGGING_FLAGS_FROM_ARG"
+# macro="$macro -DELPP_DEFAULT_LOG_FILE=\"/a/path/that/does/not/exist/f.log\""
+
+if [ "$2" = "" ];then
+  COMPILER=g++
 else
-  if [ "$2" = "MAC" ];then
-    macro="__APPLE__"
-  else
-    macro="__linux"
-  fi
+  COMPILER=$2
 fi
-
-if [ "$2" = "disable" ] || [ "$3" = "disable" ]; then
-  macro="$macro -D_DISABLE_LOGS"
-fi
-
-## Extra macros
-macro="$macro -D_QUALITY_ASSURANCE"
-macro="$macro -D_ELPP_STL_LOGGING"
-macro="$macro -D_ELPP_QT_LOGGING"
 
 CXX_STD='-std=c++0x -pthread'
 
@@ -30,9 +26,12 @@ fi
 
 echo "Compiling... [$FILE]"
 
-if [ "$macro" = "" ];then
-  g++ $FILE -o $FILE.bin $CXX_STD
-else
-  g++ $FILE -o bin/$FILE.bin -D $macro $CXX_STD
-fi
-echo "\tDONE! [./bin/$FILE.bin]"
+COMPILE_LINE="$COMPILER $FILE -o bin/$FILE.bin $macro $CXX_STD -Wall -Wextra -pedantic -pedantic-errors -Werror -Wfatal-errors"
+
+echo "    $COMPILE_LINE"
+
+$($COMPILE_LINE)
+
+echo "    DONE! [./bin/$FILE.bin]"
+echo
+echo

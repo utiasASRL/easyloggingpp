@@ -1,17 +1,33 @@
 ## Helper script for build_all.sh
 
 FILE=$1
+
+macro="$macro -DELPP_THREAD_SAFE"
+macro="$macro -DELPP_STL_LOGGING"
+macro="$macro -DELPP_WXWIDGETS_LOGGING"
+macro="$macro -DELPP_STACKTRACE_ON_CRASH"
+
+if [ "$2" = "" ];then
+  COMPILER=g++
+else
+  COMPILER=$2
+fi
+
+CXX_STD='-std=c++0x -pthread'
+
 if [ "$FILE" = "" ]; then
   echo "Please provide filename to compile"
   exit
 fi
-## Extra macros
-macro="-D_QUALITY_ASSURANCE"
-macro="$macro -D_ELPP_STL_LOGGING"
-macro="$macro -D_ELPP_WXWIDGETS_LOGGING"
-
-CXX_STD='-std=c++0x -pthread'
 
 echo "Compiling... [$FILE]"
-g++ $FILE `wx-config --libs` `wx-config --cxxflags` -o bin/$FILE.bin $macro $CXX_STD
-echo "\tDONE! [./bin/$FILE.bin]"
+
+COMPILE_LINE="$COMPILER $FILE -o bin/$FILE.bin $macro $CXX_STD -Wall -Wextra `wx-config --cppflags` `wx-config --libs`"
+
+echo "    $COMPILE_LINE"
+
+$($COMPILE_LINE)
+
+echo "    DONE! [./bin/$FILE.bin]"
+echo
+echo
