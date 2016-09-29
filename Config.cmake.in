@@ -1,0 +1,3 @@
+set(EASYLOGGINGPP_ROOT @INSTALL_DIR@)
+set(CMAKE_MODULE_PATH "@SOURCE_DIR@/cmake")
+find_package(Easyloggingpp MODULE REQUIRED)

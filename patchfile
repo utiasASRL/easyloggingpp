@@ -1,0 +1,12 @@
+diff -Naur src-v9.83/CMakeLists.txt src/CMakeLists.txt
+--- src-v9.83/CMakeLists.txt	2016-09-28 15:30:58.609381240 -0400
++++ src/CMakeLists.txt	2016-09-28 15:31:27.101382255 -0400
+@@ -19,7 +19,7 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+ # SOFTWARE.
+ #==============================================================================
+-cmake_minimum_required(VERSION 3.3)
++cmake_minimum_required(VERSION 2.8)
+ 
+ project(Easyloggingpp CXX)
+ 
