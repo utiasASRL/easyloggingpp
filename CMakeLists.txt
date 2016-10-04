@@ -33,9 +33,6 @@ ExternalProject_Add(${EP_NAME}
   INSTALL_COMMAND $(MAKE) install && rsync -r ../${EP_NAME}/cmake <INSTALL_DIR>
 )
 
-# generate our PackageConfig.cmake and -version.cmake
-#catkin_package()
-
 # grab the source and install dir from the external project
 ExternalProject_Get_Property(${EP_NAME} SOURCE_DIR)
 ExternalProject_Get_Property(${EP_NAME} INSTALL_DIR)
@@ -59,7 +56,7 @@ configure_file(Config.cmake.in ${DEVEL_PC} @ONLY)
 set(CONFIG_DIR ${PACKAGE_INSTALL_PREFIX}) # used in Config.cmake.in
 configure_file(Config.cmake.in ${INSTALL_PC} @ONLY)
 
-# generate the PackageConfigVersion.cmake that has our version information
+# generate the PackageConfigVersion.cmake since easyloggingpp doesn't come with one
 configure_file(ConfigVersion.cmake.in ${DEVEL_PC_VERSION} @ONLY)
 
 # install the package
