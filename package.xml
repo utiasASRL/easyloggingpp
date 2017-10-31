@@ -14,12 +14,10 @@
 
 
   <!--BUILD DEPENDENCIES-->
-  <!-- build_depend></build_depend -->
-
+  <build_depend>catkin_optional</build_depend>
 
   <!--RUNTIME DEPENDENCIES-->
-  <!-- run_depend></run_depend -->
-
+  <run_depend>catkin_optional</run_depend>
 
   <!--TEST DEPENDENCIES-->
   <!-- test_depend></test_depend -->

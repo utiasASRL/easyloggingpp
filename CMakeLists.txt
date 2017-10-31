@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 # the project name should match that of the external project (kinda sketchy)
 project(easyloggingpp)
 
-find_package(catkin REQUIRED)
+find_package(catkin_optional REQUIRED)
+co_build_type() # cache the build type
 
 include(ExternalProject)
 
@@ -24,7 +25,7 @@ ExternalProject_Add(${EP_NAME}
   # Fix the required cmake version. To generate: diff -Naur old-src new-src > patchfile
   PATCH_COMMAND echo "Patching easylogging ..." && patch -p1 -tN < ${CMAKE_CURRENT_SOURCE_DIR}/patchfile && echo "done."
   # Install where catkin wants us to
-  INSTALL_DIR ${CATKIN_DEVEL_PREFIX}/${PROJECT_NAME}
+  INSTALL_DIR ${CMAKE_DEVEL_PREFIX}/${PROJECT_NAME}
   # Pass the install dir on to cmake
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:string=<INSTALL_DIR>
   # $(MAKE) uses the catkin jobserver (vs make)
@@ -44,8 +45,8 @@ set(PACKAGE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
 # Helpful variables for PackageConfig creation
 set(PC_NAME ${PROJECT_NAME}Config.cmake)
 set(PC_VERSION_NAME ${PROJECT_NAME}ConfigVersion.cmake)
-set(DEVEL_PC ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/${PC_NAME})
-set(DEVEL_PC_VERSION ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/${PC_VERSION_NAME})
+set(DEVEL_PC ${CMAKE_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/${PC_NAME})
+set(DEVEL_PC_VERSION ${CMAKE_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/${PC_VERSION_NAME})
 set(INSTALL_PC ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PC_NAME})
 
 # generate PackageConfig.cmake that points to the FindModule.cmake
@@ -63,4 +64,4 @@ configure_file(ConfigVersion.cmake.in ${DEVEL_PC_VERSION} @ONLY)
 install(DIRECTORY ${INSTALL_DIR}/ DESTINATION ${PACKAGE_INSTALL_PREFIX})
 # install our PackageConfig.cmake that points to the install folder
 install(FILES ${INSTALL_PC} ${DEVEL_PC}
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake)
